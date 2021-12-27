@@ -27,11 +27,8 @@ WiFiClient client;
 int IOExShield_Pin_TempSensor = 12;
 
 //Server Connected To
-// char serverName[] = "www.ptsv2.com";
-// char pageName[] = "/t/sensor/post";
-// int serverPort = 80;
-char serverName[] = "18.210.225.101";
-char pageName[] = "/sensor_post";
+char serverName[] = IP_ADDRESS;
+char pageName[] = PAGE_NAME;
 int serverPort = 80;
 //Time Variables for keeping track of Time Interval
 unsigned long thisMillis = 0;
@@ -41,7 +38,7 @@ unsigned long lastMillis = 0;
 char bodyBuff[420];
 
 //Sets timer for sending new data
-#define delayTime 30000 
+#define delayTime 30000
 
 //Temp Chip I/O, tells OneWire what sensor to connect to
 OneWire ts(IOExShield_Pin_TempSensor);
@@ -54,7 +51,7 @@ void setup() {
 }
 
 void loop() {
-   // getTemp();
+    // getTemp();
     catJSON(getTemp());
     //catJSON();
     delay(delayTime);
@@ -204,18 +201,17 @@ byte postJSON(char *domainBuffer, int domainPort, char *pageName, char *thisData
 
 }
 
-void catJSON(float tempReading)
-{
-   float fahrenheit = tempReading * 1.8 + 32.0;
-   doc["Pool Sensor Data"] = 1;
-   JsonArray sensorInfo = doc.createNestedArray("Temperature");
-   JsonObject sensorData = sensorInfo.createNestedObject();
+void catJSON(float tempReading) {
+    float fahrenheit = tempReading * 1.8 + 32.0;
+    doc["Pool Sensor Data"] = 1;
+    JsonArray sensorInfo = doc.createNestedArray("Temperature");
+    JsonObject sensorData = sensorInfo.createNestedObject();
 
-   sensorData["Celsius"] = tempReading;
-   sensorData["Fahrenheit"] = fahrenheit;
-   serializeJsonPretty(doc, bodyBuff);
-   doc.garbageCollect();
+    sensorData["Celsius"] = tempReading;
+    sensorData["Fahrenheit"] = fahrenheit;
+    serializeJsonPretty(doc, bodyBuff);
+    doc.garbageCollect();
 
-   if(!postJSON(serverName,serverPort,pageName,bodyBuff)) Serial.print(F("Fail "));
-   else Serial.print(F("Pass "));
+    if (!postJSON(serverName, serverPort, pageName, bodyBuff)) Serial.print(F("Fail "));
+    else Serial.print(F("Pass "));
 }
