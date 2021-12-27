@@ -1,6 +1,7 @@
 //Author: Ethan Armbruster
 //Date: 11/30/21
 //Rev 0.1 Swimming Pool Sensor "Hub"
+//Sends sensor data to a Flask app at AWS and inserts the data in a Database
 
 //Libraries for WiFi Connectivity
 #include <WiFiNINA.h>
